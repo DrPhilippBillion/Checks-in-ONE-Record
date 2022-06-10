@@ -90,7 +90,7 @@ The basic approach for checks is a separation of check template provider and che
 
 The following diagram shows the relevant data fields in the ONE Record data model:
 
-![DataModel](docs/dm.svg) 
+![DataModel](diagrams/dm.svg) 
 
 ## referring LO
 
@@ -110,57 +110,57 @@ The ***checkURI*** is the unique ID for a check LO.
 
 The ***checkTemplate*** contains the link to a check template LO. Example: "1r.lufthansa-cargo.com/templates/current/DG-acceptance-check"
 
-### Data field: totalResult
+### Data field: checkTotalResult
 
-The ***totalResult*** contains the link to a total result LO. Example: "1r.aviation-services.com/DG-acceptance-checks/FRA/020-55522664/result"
+The ***checkTotalResult*** contains the link to a total result LO. Example: "1r.aviation-services.com/DG-acceptance-checks/FRA/020-55522664/result"
 
-### Data field: type
+### Data field: CheckType
 
-The ***type*** is a string and contains a description of the check type. Example: "DG acceptance check"
+The ***checkType*** is a string and contains a description of the check type. Example: "DG acceptance check"
 
 ### Data field: checker
 
 The ***checker*** is of type person and links the person performing the complete check. Example: "1r.aviation-services.com/staff/MikeTyson".
 
-### Data field: date
+### Data field: checkDate
 
-The ***date*** is the date/timestamp, when the check was finalized. Example: "_?std. timestamp_".
+The ***checkDate*** is the date/timestamp, when the check was finalized. Example: "_?std. timestamp_".
 
-### Data field: location
+### Data field: checkLocation
 
-The ***location*** is a link into a location object and indicates the execution location of the complete check. Example: "1r.aviation-services.com/warehouses/FRA".
+The ***checkLocation*** is a link into a location object and indicates the execution location of the complete check. Example: "1r.aviation-services.com/warehouses/FRA".
 
-### Data field: externalReference
+### Data field: checkExternalReference
 
-The ***externalReference*** is a link into an externalRerefence that has a relation with the complete check. This could e.g. be a photo taken during check. Example: "1r.aviation-services.com/photos/08651465". This should not contain e.g. a pdf copy of the completed check sheet, as this is to be provided in the totalResults LO.
+The ***checkExternalReference*** is a link into an externalRerefence that has a relation with the complete check. This could e.g. be a photo taken during check. Example: "1r.aviation-services.com/photos/08651465". This should not contain e.g. a pdf copy of the completed check sheet, as this is to be provided in the totalResults LO.
 
-## totalResults LO
+## checkTotalResult LO
 
-The totalResults LO should be provided by the party executing and accounting for the check result.
+The checkTotalResult LO should be provided by the party executing and accounting for the check result.
 
 ### Data field: checkURI
 
 This data field contains the backlink to the check LO.
 
-### Data field: passed
+### Data field: resultPassed
 
-***passed*** is a string text field with possible options "yes", "no" and "N/A". Example: "yes".
+***resultPassed*** is a string text field with possible options "yes", "no" and "N/A". Example: "yes".
 
-### Data field: value
+### Data field: resultValue
 
 If the total result of a check provides a value, if can be shared in this data field of type value with the two components ***value*** and ***unit***. If e.g. the check is a temperature as manually read from a device, it would be "5° Celsius". But even in this case, a prefered solution would be to use a template with only one question on the current temperature and one answer with the actual temperature.
 
-### Data field: remarks
+### Data field: resultRemarks
 
-***remarks*** is a string text field that can contain any free text remarks on the total result. Example: "Delayed check due to delayed arrival of aircraft".
+***resultRemarks*** is a string text field that can contain any free text remarks on the total result. Example: "Delayed check due to delayed arrival of aircraft".
 
-### Data field: certifiedBy
+### Data field: resultCertifiedBy
 
-Only if the checker does not sign responsible for the text result, the ***certifiedBy*** must link a person in charge of the check result, if required at all. Example: "1r.aviation-services.com/staff/JimMiller".
+Only if the checker does not sign responsible for the text result, the ***resultCertifiedBy*** must link a person in charge of the check result, if required at all. Example: "1r.aviation-services.com/staff/JimMiller".
 
-### Data field: externalReference
+### Data field: resultExternalReference
 
-The ***externalReference*** is a link into an externalRerefence that has a relation with the check result. This could e.g. be a generated PDF with a scanned signature of the paper check sheet version. Example: "1r.aviation-services.com/DG-acceptance-checks/FRA/020-55522664/result/PDF"
+The ***resultExternalReference*** is a link into an externalRerefence that has a relation with the check result. This could e.g. be a generated PDF with a scanned signature of the paper check sheet version. Example: "1r.aviation-services.com/DG-acceptance-checks/FRA/020-55522664/result/PDF"
 
 ## checkTemplate LO
 
@@ -244,15 +244,30 @@ Each answer LO provides one answer for each question of the template used for th
 
 ### Data field: answerURI
 
-The ***answerURI*** is the unique ID of the answer. Example: "1r.aviation-services.com/DG-acceptance-checks/FRA/020-55522664/result/answerQuestion1"
+The ***answerURI*** is the unique ID of the answer. Example: "1r.aviation-services.com/DG-acceptance-checks/FRA/020-55522664/result/answerQuestion1".
 
+### Data field: answerText
+
+The ***answerText*** is a string provided as response to a question. Example: "N/A".
+
+### Data field: answerValue
+
+The ***answerValue*** is a value provided as response to a question. It is of type value and thus consists of value and unit. Example: "5° celsius".
+
+### Data field: answerLocation
+
+The ***answerLocation*** is a location provided to inform the data consumer where the linked question was answered. This is especially relevant if checks are split into a physical and a documentary part, performed at different locations. It can also serve a additional authentication feature when e.g. connected with a geolocation sensor of a device. It is of type location. Example: "IATA Service Center Madrid".
+
+### Data field: answerPerson
+
+The ***answerPerson*** is refering to a natural person to inform the data consumer who answered the question. This is especially relevant if checks are split into a physical and a documentary part, performed different persons. Example: "1r.aviation-services.com/staff/MikeTyson".
+
+### Data field: answerExternalReference
+
+The ***answerExternalReference*** is a link to a BLOB with a connection to the answer of the question. This could for example be a foto of a piece, if it was damaged and the status was asked in the question. Example: "1r.aviation-services.com/photos/546468882".
+
+### Data field: answerOtherParty
+
+The ***answerOtherParty***can link another party of relevance to the answer of the question. This could for example be an external provider executing the check. It should only be used if this party is different to the providing party of the answer. Example: "1r.aviation-services-london.com".
 
 ## Additional comments / FAQs
-
-### How do we deal with missing piece information?
-
-Principally, the ONE Record data model is based on the piece. Thus the ***climateImpact*** LO is linked to the piece, never the shipment. Thus we seem to have a problem, if e.g. the weights of each piece are missing, as this is a relevant factor for climate Impact calculation. 
-
-But even if *detailed* piece information are not available, the number of pieces is usually available. In that case, the ***totalGrossWeight*** of the shipment is divided over the number of pieces. Meaning that it is assumed that all pieces have the same weight. This procedure is called the "use of piece skeletons". But this approach is only to be applied, if there´s no piece information available. If piece information are available, they must be taken into account for the climate impact calculation.
-
-If a consumer wants to consume the ***climateImpact*** on shipment level, it is required to sum up the ***climateImpact*** of all pieces within the shipment. Providing the climate impact on shipment level is not possible within ONE Record.
