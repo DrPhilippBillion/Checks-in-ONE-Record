@@ -90,7 +90,7 @@ The basic approach for checks is a separation of check template provider and che
 
 The following diagram shows the relevant data fields in the ONE Record data model:
 
-![DataModel](diagrams/dm.svg) 
+![DataModel](dm.svg) 
 
 ## referring LO
 
