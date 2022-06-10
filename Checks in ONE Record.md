@@ -336,6 +336,15 @@ The ***answerExternalReference*** is a link to a BLOB with a connection to the a
 
 ### Data field: answerOtherParty
 
-The ***answerOtherParty***can link another party of relevance to the answer of the question. This could for example be an external provider executing the check. It should only be used if this party is different to the providing party of the answer. Example: "1r.aviation-services-london.com".
+The ***answerOtherParty*** can link another party of relevance to the answer of the question. This could for example be an external provider executing the check. It should only be used if this party is different to the providing party of the answer. Example: "1r.aviation-services-london.com".
+
+## UseCase: Sharing Content quality check information
+
+Lufthansa Cargo provides structured feedback to it´s customers on the quality of the shipment data ("preCheck"). The follwing chapter explain how to share this information in a ONE Record environment.
+
+### Data field matching
+
+tbd.
+
 
 ## Additional comments / FAQs
