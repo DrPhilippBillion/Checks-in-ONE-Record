@@ -7,12 +7,14 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix item: <https://onerecord.iata.org/Item#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix check: <https://onerecord.iata.org/Check#> .
 @prefix event: <https://onerecord.iata.org/Event#> .
 @prefix party: <https://onerecord.iata.org/Party#> .
 @prefix piece: <https://onerecord.iata.org/Piece#> .
 @prefix price: <https://onerecord.iata.org/Price#> .
 @prefix terms: <http://purl.org/dc/terms/> .
 @prefix value: <https://onerecord.iata.org/Value#> .
+@prefix answer: <https://onerecord.iata.org/Answer#> .
 @prefix branch: <https://onerecord.iata.org/Branch#> .
 @prefix itemDg: <https://onerecord.iata.org/ItemDg#> .
 @prefix person: <https://onerecord.iata.org/Person#> .
@@ -34,6 +36,7 @@
 @prefix eventUld: <https://onerecord.iata.org/EventUld#> .
 @prefix location: <https://onerecord.iata.org/Location#> .
 @prefix partyawb: <https://onerecord.iata.org/PartyAWB#> .
+@prefix question: <https://onerecord.iata.org/Question#> .
 @prefix schedule: <https://onerecord.iata.org/Schedule#> .
 @prefix shipment: <https://onerecord.iata.org/Shipment#> .
 @prefix insurance: <https://onerecord.iata.org/Insurance#> .
@@ -50,6 +53,7 @@
 @prefix measurements: <https://onerecord.iata.org/Measurements#> .
 @prefix sensorGeoloc: <https://onerecord.iata.org/SensorGeoloc#> .
 @prefix bookingOption: <https://onerecord.iata.org/BookingOption#> .
+@prefix checkTemplate: <https://onerecord.iata.org/CheckTemplate#> .
 @prefix co2CalcMethod: <https://onerecord.iata.org/CO2CalcMethod#> .
 @prefix commonobjects: <https://onerecord.iata.org/CommonObjects#> .
 @prefix companybranch: <https://onerecord.iata.org/CompanyBranch#> .
@@ -67,6 +71,7 @@
 @prefix otherIdentifier: <https://onerecord.iata.org/OtherIdentifier#> .
 @prefix regulatedEntity: <https://onerecord.iata.org/RegulatedEntity#> .
 @prefix specialHandling: <https://onerecord.iata.org/SpecialHandling#> .
+@prefix checkTotalResult: <https://onerecord.iata.org/CheckTotalResult#> .
 @prefix epermitSignature: <https://onerecord.iata.org/EpermitSignature#> .
 @prefix transportSegment: <https://onerecord.iata.org/TransportSegment#> .
 @prefix volumetricWeight: <https://onerecord.iata.org/VolumetricWeight#> .
@@ -84,8 +89,8 @@
 @base <https://onerecord.iata.org/> .
 
 <https://onerecord.iata.org/> rdf:type owl:Ontology ;
-                               dc:description "The IATA ONE Record vocabulary, described using W3C RDF Schema and the Web Ontology Language. Customised for Hackathon in Toronto"@en ;
-                               dc:title "IATA ONE Record Ontology - Custom Version Team GDPR for YYZ Hackathon in Toronto"@en ;
+                               dc:description "The IATA ONE Record vocabulary, described using W3C RDF Schema and the Web Ontology Language. Customised to include Checks."@en ;
+                               dc:title "IATA ONE Record Ontology - Custom Version including Checks"@en ;
                                terms:abstract "05-10-2022" ,
                                               "The ontology of the IATA ONE Record standard is the core data model underlying the Linked Data solution drafted by the ONE Record standard: https://github.com/IATA-Cargo/ONE-Record. ONE Record is a standard for data sharing and creates a single record view of the shipment. This standard defines a common data model for the data that is shared via standardized and secured web API."@en ;
                                terms:title "IATA ONE Record Ontology"@en ;
@@ -115,11 +120,11 @@ Version 2.0.0
 - Official release to validate Version 1.2.0 and 1.2.1 changes
 - ServiceRequest and SpecialHandling objects are replaced with HandlingInstructions object
 - Added Party#otherIdentifiers
-Version 2.0.0a GDPR Hackathon Custom Version
+Version 2.0.0.Checks.1
 - Added LOs CheckTemplate, CheckTotalResult, Question, Answer, Check as Event subtype including properties as documented in this repository"""@en ;
                                rdfs:isDefinedBy "https://www.iata.org/one-record/"^^xsd:anyURI ;
                                rdfs:label "IATA ONE Record Ontology"@en ;
-                               owl:versionInfo "2.0.0a GDPR Hackathon Custom Version"@en .
+                               owl:versionInfo "2.0.0.Checks.1"@en .
 
 #################################################################
 #    Annotation properties
@@ -182,43 +187,43 @@ address:country rdf:type owl:ObjectProperty ;
 
 
 ###  https://onerecord.iata.org/Answer#answerExternalReference
-<https://onerecord.iata.org/Answer#answerExternalReference> rdf:type owl:ObjectProperty ;
-                                                            rdfs:domain :Answer ;
-                                                            rdfs:range :ExternalReference ;
-                                                            rdfs:comment "The answerExternalReference is a link to a BLOB with a connection to the answer of the question. This could for example be a foto of a piece, if it was damaged and the status was asked in the question. Example: \"1r.aviation-services.com/photos/546468882\"."@en ;
-                                                            rdfs:label "answer:answerExternalReference"@en .
+answer:answerExternalReference rdf:type owl:ObjectProperty ;
+                               rdfs:domain :Answer ;
+                               rdfs:range :ExternalReference ;
+                               rdfs:comment "The answerExternalReference is a link to a BLOB with a connection to the answer of the question. This could for example be a foto of a piece, if it was damaged and the status was asked in the question. Example: \"1r.aviation-services.com/photos/546468882\"."@en ;
+                               rdfs:label "answer:answerExternalReference"@en .
 
 
 ###  https://onerecord.iata.org/Answer#answerLocation
-<https://onerecord.iata.org/Answer#answerLocation> rdf:type owl:ObjectProperty ;
-                                                   rdfs:domain :Answer ;
-                                                   rdfs:range :Location ;
-                                                   rdfs:comment "The answerLocation is a location provided to inform the data consumer where the linked question was answered. This is especially relevant if checks are split into a physical and a documentary part, performed at different locations. It can also serve a additional authentication feature when e.g. connected with a geolocation sensor of a device. It is of type location. Example: \"IATA Service Center Madrid\"."@en ;
-                                                   rdfs:label "answer:answerLocation"@en .
+answer:answerLocation rdf:type owl:ObjectProperty ;
+                      rdfs:domain :Answer ;
+                      rdfs:range :Location ;
+                      rdfs:comment "The answerLocation is a location provided to inform the data consumer where the linked question was answered. This is especially relevant if checks are split into a physical and a documentary part, performed at different locations. It can also serve a additional authentication feature when e.g. connected with a geolocation sensor of a device. It is of type location. Example: \"IATA Service Center Madrid\"."@en ;
+                      rdfs:label "answer:answerLocation"@en .
 
 
 ###  https://onerecord.iata.org/Answer#answerOtherParty
-<https://onerecord.iata.org/Answer#answerOtherParty> rdf:type owl:ObjectProperty ;
-                                                     rdfs:domain :Answer ;
-                                                     rdfs:range :Party ;
-                                                     rdfs:comment "The answerOtherParty can link another party of relevance to the answer of the question. This could for example be an external provider executing the check. It should only be used if this party is different to the providing party of the answer. Example: \"1r.aviation-services-london.com\"."@en ;
-                                                     rdfs:label "answer:answerOtherParty"@en .
+answer:answerOtherParty rdf:type owl:ObjectProperty ;
+                        rdfs:domain :Answer ;
+                        rdfs:range :Party ;
+                        rdfs:comment "The answerOtherParty can link another party of relevance to the answer of the question. This could for example be an external provider executing the check. It should only be used if this party is different to the providing party of the answer. Example: \"1r.aviation-services-london.com\"."@en ;
+                        rdfs:label "answer:answerOtherParty"@en .
 
 
 ###  https://onerecord.iata.org/Answer#answerPerson
-<https://onerecord.iata.org/Answer#answerPerson> rdf:type owl:ObjectProperty ;
-                                                 rdfs:domain :Answer ;
-                                                 rdfs:range :Person ;
-                                                 rdfs:comment "The answerPerson is refering to a natural person to inform the data consumer who answered the question. This is especially relevant if checks are split into a physical and a documentary part, performed different persons. Example: \"1r.aviation-services.com/staff/MikeTyson\"."@en ;
-                                                 rdfs:label "answer:answerPerson"@en .
+answer:answerPerson rdf:type owl:ObjectProperty ;
+                    rdfs:domain :Answer ;
+                    rdfs:range :Person ;
+                    rdfs:comment "The answerPerson is refering to a natural person to inform the data consumer who answered the question. This is especially relevant if checks are split into a physical and a documentary part, performed different persons. Example: \"1r.aviation-services.com/staff/MikeTyson\"."@en ;
+                    rdfs:label "answer:answerPerson"@en .
 
 
 ###  https://onerecord.iata.org/Answer#answerValue
-<https://onerecord.iata.org/Answer#answerValue> rdf:type owl:ObjectProperty ;
-                                                rdfs:domain :Answer ;
-                                                rdfs:range :Value ;
-                                                rdfs:comment "The answerValue is a value provided as response to a question. It is of type value and thus consists of value and unit. Example: \"5° celsius\"."@en ;
-                                                rdfs:label "answer:answerValue"@en .
+answer:answerValue rdf:type owl:ObjectProperty ;
+                   rdfs:domain :Answer ;
+                   rdfs:range :Value ;
+                   rdfs:comment "The answerValue is a value provided as response to a question. It is of type value and thus consists of value and unit. Example: \"5° celsius\"."@en ;
+                   rdfs:label "answer:answerValue"@en .
 
 
 ###  https://onerecord.iata.org/Booking#carrier
@@ -659,99 +664,99 @@ characteristics:product rdf:type owl:ObjectProperty ;
 
 
 ###  https://onerecord.iata.org/Check#checkExternalReference
-<https://onerecord.iata.org/Check#checkExternalReference> rdf:type owl:ObjectProperty ;
-                                                          rdfs:domain :Check ;
-                                                          rdfs:range :ExternalReference ;
-                                                          rdfs:comment "The checkExternalReference is a link into an externalRerefence that has a relation with the complete check. This could e.g. be a photo taken during check. Example: \"1r.aviation-services.com/photos/08651465\". This should not contain e.g. a pdf copy of the completed check sheet, as this is to be provided in the totalResults LO."@en ;
-                                                          rdfs:label "check:checkExternalReference"@en .
+check:checkExternalReference rdf:type owl:ObjectProperty ;
+                             rdfs:domain :Check ;
+                             rdfs:range :ExternalReference ;
+                             rdfs:comment "The checkExternalReference is a link into an externalRerefence that has a relation with the complete check. This could e.g. be a photo taken during check. Example: \"1r.aviation-services.com/photos/08651465\". This should not contain e.g. a pdf copy of the completed check sheet, as this is to be provided in the totalResults LO."@en ;
+                             rdfs:label "check:checkExternalReference"@en .
 
 
 ###  https://onerecord.iata.org/Check#checkLocation
-<https://onerecord.iata.org/Check#checkLocation> rdf:type owl:ObjectProperty ;
-                                                 rdfs:domain :Check ;
-                                                 rdfs:range :Location ;
-                                                 rdfs:comment "The checkLocation is a link into a location object and indicates the execution location of the complete check. Example: \"1r.aviation-services.com/warehouses/FRA\"."@en ;
-                                                 rdfs:label "check:checkLocation"@en .
+check:checkLocation rdf:type owl:ObjectProperty ;
+                    rdfs:domain :Check ;
+                    rdfs:range :Location ;
+                    rdfs:comment "The checkLocation is a link into a location object and indicates the execution location of the complete check. Example: \"1r.aviation-services.com/warehouses/FRA\"."@en ;
+                    rdfs:label "check:checkLocation"@en .
 
 
 ###  https://onerecord.iata.org/Check#checkTemplate
-<https://onerecord.iata.org/Check#checkTemplate> rdf:type owl:ObjectProperty ;
-                                                 rdfs:domain :Check ;
-                                                 rdfs:range :CheckTemplate ;
-                                                 rdfs:comment "The checkTemplate contains the link to a check template LO. Example: \"1r.lufthansa-cargo.com/templates/current/DG-acceptance-check\""@en ;
-                                                 rdfs:label "check:checkTemplate"@en .
+check:checkTemplate rdf:type owl:ObjectProperty ;
+                    rdfs:domain :Check ;
+                    rdfs:range :CheckTemplate ;
+                    rdfs:comment "The checkTemplate contains the link to a check template LO. Example: \"1r.lufthansa-cargo.com/templates/current/DG-acceptance-check\""@en ;
+                    rdfs:label "check:checkTemplate"@en .
 
 
 ###  https://onerecord.iata.org/Check#checkTotalResult
-<https://onerecord.iata.org/Check#checkTotalResult> rdf:type owl:ObjectProperty ;
-                                                    rdfs:domain :Check ;
-                                                    rdfs:range :CheckTotalResult ;
-                                                    rdfs:comment "The checkTotalResult contains the link to a total result LO. Example: \"1r.aviation-services.com/DG-acceptance-checks/FRA/020-55522664/result\""@en ;
-                                                    rdfs:label "check:checkTotalResult"@en .
+check:checkTotalResult rdf:type owl:ObjectProperty ;
+                       rdfs:domain :Check ;
+                       rdfs:range :CheckTotalResult ;
+                       rdfs:comment "The checkTotalResult contains the link to a total result LO. Example: \"1r.aviation-services.com/DG-acceptance-checks/FRA/020-55522664/result\""@en ;
+                       rdfs:label "check:checkTotalResult"@en .
 
 
 ###  https://onerecord.iata.org/Check#checker
-<https://onerecord.iata.org/Check#checker> rdf:type owl:ObjectProperty ;
-                                           rdfs:domain :Check ;
-                                           rdfs:range :Person ;
-                                           rdfs:comment "The checker is of type person and links the person performing the complete check. Example: \"1r.aviation-services.com/staff/MikeTyson\"."@en ;
-                                           rdfs:label "check:checker"@en .
+check:checker rdf:type owl:ObjectProperty ;
+              rdfs:domain :Check ;
+              rdfs:range :Person ;
+              rdfs:comment "The checker is of type person and links the person performing the complete check. Example: \"1r.aviation-services.com/staff/MikeTyson\"."@en ;
+              rdfs:label "check:checker"@en .
 
 
 ###  https://onerecord.iata.org/CheckTemplate#legacyTemplate
-<https://onerecord.iata.org/CheckTemplate#legacyTemplate> rdf:type owl:ObjectProperty ;
-                                                          rdfs:domain :CheckTemplate ;
-                                                          rdfs:range :ExternalReference ;
-                                                          rdfs:comment "The legacyTemplate is an externalReference linking a photo or pdf of the original paper version of a check template."@en ;
-                                                          rdfs:label "checkTemplate:legacyTemplate"@en .
+checkTemplate:legacyTemplate rdf:type owl:ObjectProperty ;
+                             rdfs:domain :CheckTemplate ;
+                             rdfs:range :ExternalReference ;
+                             rdfs:comment "The legacyTemplate is an externalReference linking a photo or pdf of the original paper version of a check template."@en ;
+                             rdfs:label "checkTemplate:legacyTemplate"@en .
 
 
 ###  https://onerecord.iata.org/CheckTemplate#templateOtherPartyInvolved
-<https://onerecord.iata.org/CheckTemplate#templateOtherPartyInvolved> rdf:type owl:ObjectProperty ;
-                                                                      rdfs:domain :CheckTemplate ;
-                                                                      rdfs:range :Party ;
-                                                                      rdfs:comment "The templateOtherPartyInvolved is linking an object of type Party that has a stake in the template. Example: \"1r.IATA.org\"."@en ;
-                                                                      rdfs:label "checkTemplate:templateOtherPartyInvolved"@en .
+checkTemplate:templateOtherPartyInvolved rdf:type owl:ObjectProperty ;
+                                         rdfs:domain :CheckTemplate ;
+                                         rdfs:range :Party ;
+                                         rdfs:comment "The templateOtherPartyInvolved is linking an object of type Party that has a stake in the template. Example: \"1r.IATA.org\"."@en ;
+                                         rdfs:label "checkTemplate:templateOtherPartyInvolved"@en .
 
 
 ###  https://onerecord.iata.org/CheckTemplate#templateQuestion
-<https://onerecord.iata.org/CheckTemplate#templateQuestion> rdf:type owl:ObjectProperty ;
-                                                            rdfs:domain :CheckTemplate ;
-                                                            rdfs:range :Question ;
-                                                            rdfs:comment "The templateQuestion links one or more objects of type Question to the checkTemplate. Example: \"1r.lufthansa-cargo.com/templates/questions/NumberOfPieces\"."@en ;
-                                                            rdfs:label "checkTemplate:templateQuestion"@en .
+checkTemplate:templateQuestion rdf:type owl:ObjectProperty ;
+                               rdfs:domain :CheckTemplate ;
+                               rdfs:range :Question ;
+                               rdfs:comment "The templateQuestion links one or more objects of type Question to the checkTemplate. Example: \"1r.lufthansa-cargo.com/templates/questions/NumberOfPieces\"."@en ;
+                               rdfs:label "checkTemplate:templateQuestion"@en .
 
 
 ###  https://onerecord.iata.org/CheckTemplate#templateUses
-<https://onerecord.iata.org/CheckTemplate#templateUses> rdf:type owl:ObjectProperty ;
-                                                        rdfs:domain :CheckTemplate ;
-                                                        rdfs:range :Check ;
-                                                        rdfs:comment "The templateUses is the backlink of the template to the check. It is effectively a list of checks, where the template was used."@en ;
-                                                        rdfs:label "checkTemplate:templateUses"@en .
+checkTemplate:templateUses rdf:type owl:ObjectProperty ;
+                           rdfs:domain :CheckTemplate ;
+                           rdfs:range :Check ;
+                           rdfs:comment "The templateUses is the backlink of the template to the check. It is effectively a list of checks, where the template was used."@en ;
+                           rdfs:label "checkTemplate:templateUses"@en .
 
 
 ###  https://onerecord.iata.org/CheckTotalResult#resultCertifiedBy
-<https://onerecord.iata.org/CheckTotalResult#resultCertifiedBy> rdf:type owl:ObjectProperty ;
-                                                                rdfs:domain :CheckTotalResult ;
-                                                                rdfs:range :Person ;
-                                                                rdfs:comment "Only if the checker does not sign responsible for the text result, the resultCertifiedBy must link a person in charge of the check result, if required at all. Example: \"1r.aviation-services.com/staff/JimMiller\"."@en ;
-                                                                rdfs:label "checkTotalResult:resultCertifiedBy"@en .
+checkTotalResult:resultCertifiedBy rdf:type owl:ObjectProperty ;
+                                   rdfs:domain :CheckTotalResult ;
+                                   rdfs:range :Person ;
+                                   rdfs:comment "Only if the checker does not sign responsible for the text result, the resultCertifiedBy must link a person in charge of the check result, if required at all. Example: \"1r.aviation-services.com/staff/JimMiller\"."@en ;
+                                   rdfs:label "checkTotalResult:resultCertifiedBy"@en .
 
 
 ###  https://onerecord.iata.org/CheckTotalResult#resultExternalReference
-<https://onerecord.iata.org/CheckTotalResult#resultExternalReference> rdf:type owl:ObjectProperty ;
-                                                                      rdfs:domain :CheckTotalResult ;
-                                                                      rdfs:range :ExternalReference ;
-                                                                      rdfs:comment "The resultExternalReference is a link into an externalRerefence that has a relation with the check result. This could e.g. be a generated PDF with a scanned signature of the paper check sheet version. Example: \"1r.aviation-services.com/DG-acceptance-checks/FRA/020-55522664/result/PDF\""@en ;
-                                                                      rdfs:label "checkTotalResult:resultExternalReference"@en .
+checkTotalResult:resultExternalReference rdf:type owl:ObjectProperty ;
+                                         rdfs:domain :CheckTotalResult ;
+                                         rdfs:range :ExternalReference ;
+                                         rdfs:comment "The resultExternalReference is a link into an externalRerefence that has a relation with the check result. This could e.g. be a generated PDF with a scanned signature of the paper check sheet version. Example: \"1r.aviation-services.com/DG-acceptance-checks/FRA/020-55522664/result/PDF\""@en ;
+                                         rdfs:label "checkTotalResult:resultExternalReference"@en .
 
 
 ###  https://onerecord.iata.org/CheckTotalResult#resultValue
-<https://onerecord.iata.org/CheckTotalResult#resultValue> rdf:type owl:ObjectProperty ;
-                                                          rdfs:domain :CheckTotalResult ;
-                                                          rdfs:range :Value ;
-                                                          rdfs:comment "If the total result of a check provides a value, if can be shared in this data field of type value with the two components value and unit. If e.g. the check is a temperature as manually read from a device, it would be \"5° Celsius\". But even in this case, a prefered solution would be to use a template with only one question on the current temperature and one answer with the actual temperature."@en ;
-                                                          rdfs:label "checkTotalResult:resultValue"@en .
+checkTotalResult:resultValue rdf:type owl:ObjectProperty ;
+                             rdfs:domain :CheckTotalResult ;
+                             rdfs:range :Value ;
+                             rdfs:comment "If the total result of a check provides a value, if can be shared in this data field of type value with the two components value and unit. If e.g. the check is a temperature as manually read from a device, it would be \"5° Celsius\". But even in this case, a prefered solution would be to use a template with only one question on the current temperature and one answer with the actual temperature."@en ;
+                             rdfs:label "checkTotalResult:resultValue"@en .
 
 
 ###  https://onerecord.iata.org/Company#branch
@@ -1501,11 +1506,11 @@ productDg:dgRadioactiveMaterial rdf:type owl:ObjectProperty ;
 
 
 ###  https://onerecord.iata.org/Question#usedInTemplate
-<https://onerecord.iata.org/Question#usedInTemplate> rdf:type owl:ObjectProperty ;
-                                                     rdfs:domain :Question ;
-                                                     rdfs:range :CheckTemplate ;
-                                                     rdfs:comment "The usedInTemplate is the backlink of the question in one or more check templates."@en ;
-                                                     rdfs:label "question:usedInTemplate"@en .
+question:usedInTemplate rdf:type owl:ObjectProperty ;
+                        rdfs:domain :Question ;
+                        rdfs:range :CheckTemplate ;
+                        rdfs:comment "The usedInTemplate is the backlink of the question in one or more check templates."@en ;
+                        rdfs:label "question:usedInTemplate"@en .
 
 
 ###  https://onerecord.iata.org/Ratings#ranges
@@ -2110,11 +2115,11 @@ address:street rdf:type owl:DatatypeProperty ;
 
 
 ###  https://onerecord.iata.org/Answer#answerText
-<https://onerecord.iata.org/Answer#answerText> rdf:type owl:DatatypeProperty ;
-                                               rdfs:domain :Answer ;
-                                               rdfs:range xsd:string ;
-                                               rdfs:comment "The answerText is a string provided as response to a question. Example: \"N/A\"."@en ;
-                                               rdfs:label "answer:answerText"@en .
+answer:answerText rdf:type owl:DatatypeProperty ;
+                  rdfs:domain :Answer ;
+                  rdfs:range xsd:string ;
+                  rdfs:comment "The answerText is a string provided as response to a question. Example: \"N/A\"."@en ;
+                  rdfs:label "answer:answerText"@en .
 
 
 ###  https://onerecord.iata.org/BookingOption#bookingStatus
@@ -2367,70 +2372,70 @@ characteristics:value rdf:type owl:DatatypeProperty ;
 
 
 ###  https://onerecord.iata.org/Check#checkDate
-<https://onerecord.iata.org/Check#checkDate> rdf:type owl:DatatypeProperty ;
-                                             rdfs:domain :Check ;
-                                             rdfs:range xsd:dateTime ;
-                                             rdfs:comment "The checkDate is the date/timestamp, when the check was finalized. Example: \"?std. timestamp\"."@en ;
-                                             rdfs:label "check:checkDate"@en .
+check:checkDate rdf:type owl:DatatypeProperty ;
+                rdfs:domain :Check ;
+                rdfs:range xsd:dateTime ;
+                rdfs:comment "The checkDate is the date/timestamp, when the check was finalized. Example: \"?std. timestamp\"."@en ;
+                rdfs:label "check:checkDate"@en .
 
 
 ###  https://onerecord.iata.org/Check#checkType
-<https://onerecord.iata.org/Check#checkType> rdf:type owl:DatatypeProperty ;
-                                             rdfs:domain :Check ;
-                                             rdfs:range xsd:string ;
-                                             rdfs:comment "The checkType is a string and contains a description of the check type. Example: \"DG acceptance check\""@en ;
-                                             rdfs:label "check:checkType"@en .
+check:checkType rdf:type owl:DatatypeProperty ;
+                rdfs:domain :Check ;
+                rdfs:range xsd:string ;
+                rdfs:comment "The checkType is a string and contains a description of the check type. Example: \"DG acceptance check\""@en ;
+                rdfs:label "check:checkType"@en .
 
 
 ###  https://onerecord.iata.org/CheckTemplate#templateDate
-<https://onerecord.iata.org/CheckTemplate#templateDate> rdf:type owl:DatatypeProperty ;
-                                                        rdfs:domain :CheckTemplate ;
-                                                        rdfs:range xsd:dateTime ;
-                                                        rdfs:comment "The templateDate is a date/timestamp containing the release point in time of the template."@en ;
-                                                        rdfs:label "checkTemplate:templateDate"@en .
+checkTemplate:templateDate rdf:type owl:DatatypeProperty ;
+                           rdfs:domain :CheckTemplate ;
+                           rdfs:range xsd:dateTime ;
+                           rdfs:comment "The templateDate is a date/timestamp containing the release point in time of the template."@en ;
+                           rdfs:label "checkTemplate:templateDate"@en .
 
 
 ###  https://onerecord.iata.org/CheckTemplate#templateName
-<https://onerecord.iata.org/CheckTemplate#templateName> rdf:type owl:DatatypeProperty ;
-                                                        rdfs:domain :CheckTemplate ;
-                                                        rdfs:range xsd:string ;
-                                                        rdfs:comment "The templateName is a string containing the name of the template. Example: \"Lufthansa Cargo DG Acceptance Check Sheet\"."@en ;
-                                                        rdfs:label "checkTemplate:templateName"@en .
+checkTemplate:templateName rdf:type owl:DatatypeProperty ;
+                           rdfs:domain :CheckTemplate ;
+                           rdfs:range xsd:string ;
+                           rdfs:comment "The templateName is a string containing the name of the template. Example: \"Lufthansa Cargo DG Acceptance Check Sheet\"."@en ;
+                           rdfs:label "checkTemplate:templateName"@en .
 
 
 ###  https://onerecord.iata.org/CheckTemplate#templatePurpose
-<https://onerecord.iata.org/CheckTemplate#templatePurpose> rdf:type owl:DatatypeProperty ;
-                                                           rdfs:domain :CheckTemplate ;
-                                                           rdfs:range xsd:string ;
-                                                           rdfs:comment "The templatePurpose is a string containing a description of the purpose of the template. Example: \"DG Acceptance Check Sheet\"."@en ;
-                                                           rdfs:label "checkTemplate:templatePurpose"@en .
+checkTemplate:templatePurpose rdf:type owl:DatatypeProperty ;
+                              rdfs:domain :CheckTemplate ;
+                              rdfs:range xsd:string ;
+                              rdfs:comment "The templatePurpose is a string containing a description of the purpose of the template. Example: \"DG Acceptance Check Sheet\"."@en ;
+                              rdfs:label "checkTemplate:templatePurpose"@en .
 
 
 ###  https://onerecord.iata.org/CheckTotalResult#resultPassed
-<https://onerecord.iata.org/CheckTotalResult#resultPassed> rdf:type owl:DatatypeProperty ;
-                                                           rdfs:domain :CheckTotalResult ;
-                                                           rdfs:range [ rdf:type rdfs:Datatype ;
-                                                                        owl:oneOf [ rdf:type rdf:List ;
-                                                                                    rdf:first "N/A" ;
-                                                                                    rdf:rest [ rdf:type rdf:List ;
-                                                                                               rdf:first "no" ;
-                                                                                               rdf:rest [ rdf:type rdf:List ;
-                                                                                                          rdf:first "yes" ;
-                                                                                                          rdf:rest rdf:nil
-                                                                                                        ]
-                                                                                             ]
-                                                                                  ]
-                                                                      ] ;
-                                                           rdfs:comment "resultPassed is a string text field with possible options \"yes\", \"no\" and \"N/A\". Example: \"yes\"."@en ;
-                                                           rdfs:label "checkTotalResult:resultPassed"@en .
+checkTotalResult:resultPassed rdf:type owl:DatatypeProperty ;
+                              rdfs:domain :CheckTotalResult ;
+                              rdfs:range [ rdf:type rdfs:Datatype ;
+                                           owl:oneOf [ rdf:type rdf:List ;
+                                                       rdf:first "N/A" ;
+                                                       rdf:rest [ rdf:type rdf:List ;
+                                                                  rdf:first "no" ;
+                                                                  rdf:rest [ rdf:type rdf:List ;
+                                                                             rdf:first "yes" ;
+                                                                             rdf:rest rdf:nil
+                                                                           ]
+                                                                ]
+                                                     ]
+                                         ] ;
+                              rdfs:comment "resultPassed is a string text field with possible options \"yes\", \"no\" and \"N/A\". Example: \"yes\"."@en ;
+                              rdfs:label "checkTotalResult:resultPassed"@en .
 
 
 ###  https://onerecord.iata.org/CheckTotalResult#resultRemarks
-<https://onerecord.iata.org/CheckTotalResult#resultRemarks> rdf:type owl:DatatypeProperty ;
-                                                            rdfs:domain :CheckTotalResult ;
-                                                            rdfs:range xsd:string ;
-                                                            rdfs:comment "resultRemarks is a string text field that can contain any free text remarks on the total result. Example: \"Delayed check due to delayed arrival of aircraft\"."@en ;
-                                                            rdfs:label "checkTotalResult:resultRemarks"@en .
+checkTotalResult:resultRemarks rdf:type owl:DatatypeProperty ;
+                               rdfs:domain :CheckTotalResult ;
+                               rdfs:range xsd:string ;
+                               rdfs:comment "resultRemarks is a string text field that can contain any free text remarks on the total result. Example: \"Delayed check due to delayed arrival of aircraft\"."@en ;
+                               rdfs:label "checkTotalResult:resultRemarks"@en .
 
 
 ###  https://onerecord.iata.org/CommonObjects#companyIdentifier
@@ -4020,51 +4025,51 @@ productDg:unNumber rdf:type owl:DatatypeProperty ;
 
 
 ###  https://onerecord.iata.org/Question#answerOptionText
-<https://onerecord.iata.org/Question#answerOptionText> rdf:type owl:DatatypeProperty ;
-                                                       rdfs:domain :Question ;
-                                                       rdfs:range xsd:string ;
-                                                       rdfs:comment "If the possible answers should be limited to one or more specific text options, this can be indicated here. The different options are to be separated by a comma. Example: \"yes, no, N/A\"."@en ;
-                                                       rdfs:label "question:answerOptionText"@en .
+question:answerOptionText rdf:type owl:DatatypeProperty ;
+                          rdfs:domain :Question ;
+                          rdfs:range xsd:string ;
+                          rdfs:comment "If the possible answers should be limited to one or more specific text options, this can be indicated here. The different options are to be separated by a comma. Example: \"yes, no, N/A\"."@en ;
+                          rdfs:label "question:answerOptionText"@en .
 
 
 ###  https://onerecord.iata.org/Question#answerOptionValue
-<https://onerecord.iata.org/Question#answerOptionValue> rdf:type owl:DatatypeProperty ;
-                                                        rdfs:domain :Question ;
-                                                        rdfs:range xsd:string ;
-                                                        rdfs:comment "If the possible answers should be limited to one or more specific value options, this can be indicated here. The different options are to be separated by a comma. Example: \"0. 1, 2, 3\". If units are required, or text should be included, the answerOptionText is to be used instead, e.g. with \"1°, 2°, more than 2°\"."@en ;
-                                                        rdfs:label "question:answerOptionValue"@en .
+question:answerOptionValue rdf:type owl:DatatypeProperty ;
+                           rdfs:domain :Question ;
+                           rdfs:range xsd:string ;
+                           rdfs:comment "If the possible answers should be limited to one or more specific value options, this can be indicated here. The different options are to be separated by a comma. Example: \"0. 1, 2, 3\". If units are required, or text should be included, the answerOptionText is to be used instead, e.g. with \"1°, 2°, more than 2°\"."@en ;
+                           rdfs:label "question:answerOptionValue"@en .
 
 
 ###  https://onerecord.iata.org/Question#questionLongText
-<https://onerecord.iata.org/Question#questionLongText> rdf:type owl:DatatypeProperty ;
-                                                       rdfs:domain :Question ;
-                                                       rdfs:range xsd:string ;
-                                                       rdfs:comment "The questionLongText is a string containing an extended text of the question. Example: \"is the number of pieces correctly indicated in the DGD and correllating with the physics?\". The use of the short text is mandatory, while the long text is optional."@en ;
-                                                       rdfs:label "question:questionLongText"@en .
+question:questionLongText rdf:type owl:DatatypeProperty ;
+                          rdfs:domain :Question ;
+                          rdfs:range xsd:string ;
+                          rdfs:comment "The questionLongText is a string containing an extended text of the question. Example: \"is the number of pieces correctly indicated in the DGD and correllating with the physics?\". The use of the short text is mandatory, while the long text is optional."@en ;
+                          rdfs:label "question:questionLongText"@en .
 
 
 ###  https://onerecord.iata.org/Question#questionNumber
-<https://onerecord.iata.org/Question#questionNumber> rdf:type owl:DatatypeProperty ;
-                                                     rdfs:domain :Question ;
-                                                     rdfs:range xsd:string ;
-                                                     rdfs:comment "The questionNumber is a string containing the number of the specific question. It is a string, not an integer, because often numbering systems like \"1.5\" or \"1a\" are used. It should be used in a way that a standard ascending sorting algorithm will sort it in a way as intended by the provider. Example: \"1.5\"."@en ;
-                                                     rdfs:label "question:questionNumber"@en .
+question:questionNumber rdf:type owl:DatatypeProperty ;
+                        rdfs:domain :Question ;
+                        rdfs:range xsd:string ;
+                        rdfs:comment "The questionNumber is a string containing the number of the specific question. It is a string, not an integer, because often numbering systems like \"1.5\" or \"1a\" are used. It should be used in a way that a standard ascending sorting algorithm will sort it in a way as intended by the provider. Example: \"1.5\"."@en ;
+                        rdfs:label "question:questionNumber"@en .
 
 
 ###  https://onerecord.iata.org/Question#questionSection
-<https://onerecord.iata.org/Question#questionSection> rdf:type owl:DatatypeProperty ;
-                                                      rdfs:domain :Question ;
-                                                      rdfs:range xsd:string ;
-                                                      rdfs:comment "If the questions are clustered into sections, the section of the specific question should be indicated into the questionSection. This is a string. Example: \"Documentary Check\"."@en ;
-                                                      rdfs:label "question:questionSection"@en .
+question:questionSection rdf:type owl:DatatypeProperty ;
+                         rdfs:domain :Question ;
+                         rdfs:range xsd:string ;
+                         rdfs:comment "If the questions are clustered into sections, the section of the specific question should be indicated into the questionSection. This is a string. Example: \"Documentary Check\"."@en ;
+                         rdfs:label "question:questionSection"@en .
 
 
 ###  https://onerecord.iata.org/Question#questionShortText
-<https://onerecord.iata.org/Question#questionShortText> rdf:type owl:DatatypeProperty ;
-                                                        rdfs:domain :Question ;
-                                                        rdfs:range xsd:string ;
-                                                        rdfs:comment "The questionShortText is a string containing a short text of the question. Example: \"Number of pieces correct?\"."@en ;
-                                                        rdfs:label "question:questionShortText"@en .
+question:questionShortText rdf:type owl:DatatypeProperty ;
+                           rdfs:domain :Question ;
+                           rdfs:range xsd:string ;
+                           rdfs:comment "The questionShortText is a string containing a short text of the question. Example: \"Number of pieces correct?\"."@en ;
+                           rdfs:label "question:questionShortText"@en .
 
 
 ###  https://onerecord.iata.org/Ranges#amount
@@ -5184,32 +5189,32 @@ waybill:waybillType rdf:type owl:DatatypeProperty ;
 :Answer rdf:type owl:Class ;
         rdfs:subClassOf :CheckObjects ,
                         [ rdf:type owl:Restriction ;
-                          owl:onProperty <https://onerecord.iata.org/Answer#answerExternalReference> ;
+                          owl:onProperty answer:answerExternalReference ;
                           owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                           owl:onClass :ExternalReference
                         ] ,
                         [ rdf:type owl:Restriction ;
-                          owl:onProperty <https://onerecord.iata.org/Answer#answerLocation> ;
+                          owl:onProperty answer:answerLocation ;
                           owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                           owl:onClass :Location
                         ] ,
                         [ rdf:type owl:Restriction ;
-                          owl:onProperty <https://onerecord.iata.org/Answer#answerOtherParty> ;
+                          owl:onProperty answer:answerOtherParty ;
                           owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                           owl:onClass :Party
                         ] ,
                         [ rdf:type owl:Restriction ;
-                          owl:onProperty <https://onerecord.iata.org/Answer#answerPerson> ;
+                          owl:onProperty answer:answerPerson ;
                           owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                           owl:onClass :Person
                         ] ,
                         [ rdf:type owl:Restriction ;
-                          owl:onProperty <https://onerecord.iata.org/Answer#answerValue> ;
+                          owl:onProperty answer:answerValue ;
                           owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                           owl:onClass :Value
                         ] ,
                         [ rdf:type owl:Restriction ;
-                          owl:onProperty <https://onerecord.iata.org/Answer#answerText> ;
+                          owl:onProperty answer:answerText ;
                           owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                           owl:onDataRange xsd:string
                         ] ;
@@ -5952,37 +5957,37 @@ waybill:waybillType rdf:type owl:DatatypeProperty ;
 :Check rdf:type owl:Class ;
        rdfs:subClassOf :Event ,
                        [ rdf:type owl:Restriction ;
-                         owl:onProperty <https://onerecord.iata.org/Check#checkExternalReference> ;
+                         owl:onProperty check:checkExternalReference ;
                          owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                          owl:onClass :ExternalReference
                        ] ,
                        [ rdf:type owl:Restriction ;
-                         owl:onProperty <https://onerecord.iata.org/Check#checkLocation> ;
+                         owl:onProperty check:checkLocation ;
                          owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                          owl:onClass :Location
                        ] ,
                        [ rdf:type owl:Restriction ;
-                         owl:onProperty <https://onerecord.iata.org/Check#checkTemplate> ;
+                         owl:onProperty check:checkTemplate ;
                          owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                          owl:onClass :CheckTemplate
                        ] ,
                        [ rdf:type owl:Restriction ;
-                         owl:onProperty <https://onerecord.iata.org/Check#checkTotalResult> ;
+                         owl:onProperty check:checkTotalResult ;
                          owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                          owl:onClass :CheckTotalResult
                        ] ,
                        [ rdf:type owl:Restriction ;
-                         owl:onProperty <https://onerecord.iata.org/Check#checker> ;
+                         owl:onProperty check:checker ;
                          owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                          owl:onClass :Person
                        ] ,
                        [ rdf:type owl:Restriction ;
-                         owl:onProperty <https://onerecord.iata.org/Check#checkDate> ;
+                         owl:onProperty check:checkDate ;
                          owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                          owl:onDataRange xsd:dateTime
                        ] ,
                        [ rdf:type owl:Restriction ;
-                         owl:onProperty <https://onerecord.iata.org/Check#checkType> ;
+                         owl:onProperty check:checkType ;
                          owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                          owl:onDataRange xsd:string
                        ] ;
@@ -6001,35 +6006,35 @@ waybill:waybillType rdf:type owl:DatatypeProperty ;
 :CheckTemplate rdf:type owl:Class ;
                rdfs:subClassOf :CheckObjects ,
                                [ rdf:type owl:Restriction ;
-                                 owl:onProperty <https://onerecord.iata.org/CheckTemplate#templateQuestion> ;
+                                 owl:onProperty checkTemplate:templateQuestion ;
                                  owl:someValuesFrom :Question
                                ] ,
                                [ rdf:type owl:Restriction ;
-                                 owl:onProperty <https://onerecord.iata.org/CheckTemplate#templateUses> ;
+                                 owl:onProperty checkTemplate:templateUses ;
                                  owl:someValuesFrom :Check
                                ] ,
                                [ rdf:type owl:Restriction ;
-                                 owl:onProperty <https://onerecord.iata.org/CheckTemplate#legacyTemplate> ;
+                                 owl:onProperty checkTemplate:legacyTemplate ;
                                  owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                  owl:onClass :ExternalReference
                                ] ,
                                [ rdf:type owl:Restriction ;
-                                 owl:onProperty <https://onerecord.iata.org/CheckTemplate#templateOtherPartyInvolved> ;
+                                 owl:onProperty checkTemplate:templateOtherPartyInvolved ;
                                  owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                  owl:onClass :Party
                                ] ,
                                [ rdf:type owl:Restriction ;
-                                 owl:onProperty <https://onerecord.iata.org/CheckTemplate#templateDate> ;
+                                 owl:onProperty checkTemplate:templateDate ;
                                  owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                  owl:onDataRange xsd:dateTime
                                ] ,
                                [ rdf:type owl:Restriction ;
-                                 owl:onProperty <https://onerecord.iata.org/CheckTemplate#templateName> ;
+                                 owl:onProperty checkTemplate:templateName ;
                                  owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                  owl:onDataRange xsd:string
                                ] ,
                                [ rdf:type owl:Restriction ;
-                                 owl:onProperty <https://onerecord.iata.org/CheckTemplate#templatePurpose> ;
+                                 owl:onProperty checkTemplate:templatePurpose ;
                                  owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                  owl:onDataRange xsd:string
                                ] ,
@@ -6046,27 +6051,27 @@ waybill:waybillType rdf:type owl:DatatypeProperty ;
 :CheckTotalResult rdf:type owl:Class ;
                   rdfs:subClassOf :CheckObjects ,
                                   [ rdf:type owl:Restriction ;
-                                    owl:onProperty <https://onerecord.iata.org/CheckTotalResult#resultCertifiedBy> ;
+                                    owl:onProperty checkTotalResult:resultCertifiedBy ;
                                     owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                     owl:onClass :Person
                                   ] ,
                                   [ rdf:type owl:Restriction ;
-                                    owl:onProperty <https://onerecord.iata.org/CheckTotalResult#resultExternalReference> ;
+                                    owl:onProperty checkTotalResult:resultExternalReference ;
                                     owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                     owl:onClass :ExternalReference
                                   ] ,
                                   [ rdf:type owl:Restriction ;
-                                    owl:onProperty <https://onerecord.iata.org/CheckTotalResult#resultValue> ;
+                                    owl:onProperty checkTotalResult:resultValue ;
                                     owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                     owl:onClass :Value
                                   ] ,
                                   [ rdf:type owl:Restriction ;
-                                    owl:onProperty <https://onerecord.iata.org/CheckTotalResult#resultPassed> ;
+                                    owl:onProperty checkTotalResult:resultPassed ;
                                     owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                     owl:onDataRange xsd:string
                                   ] ,
                                   [ rdf:type owl:Restriction ;
-                                    owl:onProperty <https://onerecord.iata.org/CheckTotalResult#resultRemarks> ;
+                                    owl:onProperty checkTotalResult:resultRemarks ;
                                     owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                     owl:onDataRange xsd:string
                                   ] ;
@@ -8420,37 +8425,37 @@ waybill:waybillType rdf:type owl:DatatypeProperty ;
 :Question rdf:type owl:Class ;
           rdfs:subClassOf :CheckObjects ,
                           [ rdf:type owl:Restriction ;
-                            owl:onProperty <https://onerecord.iata.org/Question#usedInTemplate> ;
+                            owl:onProperty question:usedInTemplate ;
                             owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                             owl:onClass :CheckTemplate
                           ] ,
                           [ rdf:type owl:Restriction ;
-                            owl:onProperty <https://onerecord.iata.org/Question#answerOptionText> ;
+                            owl:onProperty question:answerOptionText ;
                             owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                             owl:onDataRange xsd:string
                           ] ,
                           [ rdf:type owl:Restriction ;
-                            owl:onProperty <https://onerecord.iata.org/Question#answerOptionValue> ;
+                            owl:onProperty question:answerOptionValue ;
                             owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                             owl:onDataRange xsd:string
                           ] ,
                           [ rdf:type owl:Restriction ;
-                            owl:onProperty <https://onerecord.iata.org/Question#questionLongText> ;
+                            owl:onProperty question:questionLongText ;
                             owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                             owl:onDataRange xsd:string
                           ] ,
                           [ rdf:type owl:Restriction ;
-                            owl:onProperty <https://onerecord.iata.org/Question#questionNumber> ;
+                            owl:onProperty question:questionNumber ;
                             owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                             owl:onDataRange xsd:string
                           ] ,
                           [ rdf:type owl:Restriction ;
-                            owl:onProperty <https://onerecord.iata.org/Question#questionSection> ;
+                            owl:onProperty question:questionSection ;
                             owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                             owl:onDataRange xsd:string
                           ] ,
                           [ rdf:type owl:Restriction ;
-                            owl:onProperty <https://onerecord.iata.org/Question#questionShortText> ;
+                            owl:onProperty question:questionShortText ;
                             owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                             owl:onDataRange xsd:string
                           ] ;
